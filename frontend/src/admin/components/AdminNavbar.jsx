@@ -1,8 +1,16 @@
 function AdminNavbar() {
+  const handleLogout = () => {
+    localStorage.removeItem("adminAuth");
+    window.location.href = "/admin-login";
+  };
+
   return (
     <div>
       <h2>Admin Panel</h2>
-      <button>Logout</button>
+
+      <button onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 }
