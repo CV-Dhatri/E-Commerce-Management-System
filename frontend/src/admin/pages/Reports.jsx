@@ -1,5 +1,12 @@
+import AdminLayout from "../layout/AdminLayout";
+
 function Reports() {
-  return <h1>Reports</h1>;
+  return (
+    <AdminLayout>
+      <h1>📈 Reports</h1>
+      <p>Reports functionality coming soon...</p>
+    </AdminLayout>
+  );
 }
 
 export default Reports;
