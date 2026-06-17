@@ -10,6 +10,7 @@ import CustomerManagement from "./admin/pages/CustomerManagement";
 import ReviewManagement from "./admin/pages/ReviewManagement";
 import CouponManagement from "./admin/pages/CouponManagement";
 import AdminLogin from "./admin/pages/AdminLogin";
+import ShippingManagement from "./admin/pages/ShippingManagement";
 
 import ProtectedRoute from "./admin/components/ProtectedRoute";
 
@@ -54,6 +55,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/shipping"
+          element={
+           <ProtectedRoute>
+             <ShippingManagement />
+           </ProtectedRoute>
+         }
+       />
 
         <Route
           path="/orders"
