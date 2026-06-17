@@ -53,6 +53,9 @@ marginBottom: "20px",
   <Link to="/inventory" style={linkStyle}>
     📊 Inventory
   </Link>
+  <Link to="/shipping" style={linkStyle}>
+  🚚 Shipping
+  </Link>
 
   <Link to="/orders" style={linkStyle}>
     🛒 Orders
