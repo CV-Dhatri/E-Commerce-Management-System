@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import AdminLayout from "../layout/AdminLayout";
 
 function ManageProducts() {
+  const [products, setProducts] = useState([]);
+
+useEffect(() => {
+  fetchProducts();
+}, []);
+
+const fetchProducts = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/api/products"
+    );
+
+    setProducts(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <AdminLayout>
       <h1
@@ -90,54 +108,72 @@ function ManageProducts() {
       >
         <h3>Product List</h3>
 
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Category</th>
-              <th>Stock</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+       <div
+  style={{
+    overflowX: "auto",
+  }}
+>
+  <table
+    className="table table-bordered table-striped"
+    style={{
+      width: "100%",
+      textAlign: "center",
+    }}
+  >
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Stock</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
 
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Laptop</td>
-              <td>₹50,000</td>
-              <td>Electronics</td>
-              <td>25</td>
-              <td>
-                <button className="btn btn-warning btn-sm me-2">
-                  Edit
-                </button>
+    <tbody>
+      {products.map((product, index) => (
+        <tr key={product._id}>
+          <td>{index + 1}</td>
 
-                <button className="btn btn-danger btn-sm">
-                  Delete
-                </button>
-              </td>
-            </tr>
+          <td style={{ minWidth: "180px" }}>
+            {product.name}
+          </td>
 
-            <tr>
-              <td>2</td>
-              <td>Mouse</td>
-              <td>₹500</td>
-              <td>Accessories</td>
-              <td>100</td>
-              <td>
-                <button className="btn btn-warning btn-sm me-2">
-                  Edit
-                </button>
+          <td style={{ minWidth: "120px" }}>
+            ₹{product.price}
+          </td>
 
-                <button className="btn btn-danger btn-sm">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <td style={{ minWidth: "150px" }}>
+            {product.category?.name}
+          </td>
+
+          <td style={{ minWidth: "100px" }}>
+            {product.stockQuantity}
+          </td>
+
+          <td style={{ minWidth: "180px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <button className="btn btn-warning btn-sm">
+                Edit
+              </button>
+
+              <button className="btn btn-danger btn-sm">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
       </div>
     </AdminLayout>
   );
