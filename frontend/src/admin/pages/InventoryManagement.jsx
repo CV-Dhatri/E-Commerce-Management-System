@@ -1,6 +1,55 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import AdminLayout from "../layout/AdminLayout";
-
 function InventoryManagement() {
+  const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState("");
+const [newStock, setNewStock] = useState("");
+  useEffect(() => {
+  fetchProducts();
+}, []);
+
+const fetchProducts = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/api/products"
+    );
+
+    setProducts(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const handleStockUpdate = async (e) => {
+  e.preventDefault();
+
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.put(
+      `http://localhost:5000/api/products/${selectedProduct}`,
+      {
+        stockQuantity: Number(newStock),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Stock Updated");
+
+    setSelectedProduct("");
+    setNewStock("");
+
+    fetchProducts();
+
+  } catch (error) {
+    console.log(error);
+    alert("Failed to update stock");
+  }
+};
 return ( <AdminLayout>
 <h1
 style={{
@@ -28,7 +77,7 @@ color: "#1e293b",
       }}
     >
       <h4>Total Products</h4>
-      <h2>120</h2>
+      <h2>{products.length}</h2>
     </div>
 
     <div
@@ -40,7 +89,13 @@ color: "#1e293b",
       }}
     >
       <h4>Total Stock</h4>
-      <h2>2,450</h2>
+      <h2>
+  {products.reduce(
+    (total, product) =>
+      total + product.stockQuantity,
+    0
+  )}
+</h2>
     </div>
 
     <div
@@ -52,7 +107,14 @@ color: "#1e293b",
       }}
     >
       <h4>Low Stock Items</h4>
-      <h2>8</h2>
+      <h2>
+  {
+    products.filter(
+      (product) =>
+        product.stockQuantity < 10
+    ).length
+  }
+</h2>
     </div>
   </div>
 
@@ -78,24 +140,20 @@ color: "#1e293b",
       </thead>
 
       <tbody>
-        <tr>
-          <td>Laptop</td>
-          <td>Electronics</td>
-          <td>25</td>
-        </tr>
+  {products.map((product) => (
+    <tr key={product._id}>
+      <td>{product.name}</td>
 
-        <tr>
-          <td>Mouse</td>
-          <td>Accessories</td>
-          <td>100</td>
-        </tr>
+      <td>
+        {product.category?.name}
+      </td>
 
-        <tr>
-          <td>Keyboard</td>
-          <td>Accessories</td>
-          <td>50</td>
-        </tr>
-      </tbody>
+      <td>
+        {product.stockQuantity}
+      </td>
+    </tr>
+  ))}
+</tbody>
     </table>
   </div>
 
@@ -119,17 +177,22 @@ color: "#1e293b",
         </tr>
       </thead>
 
-      <tbody>
-        <tr>
-          <td>Headphones</td>
-          <td>5</td>
-        </tr>
+     <tbody>
+  {products
+    .filter(
+      (product) =>
+        product.stockQuantity < 10
+    )
+    .map((product) => (
+      <tr key={product._id}>
+        <td>{product.name}</td>
 
-        <tr>
-          <td>Webcam</td>
-          <td>3</td>
-        </tr>
-      </tbody>
+        <td>
+          {product.stockQuantity}
+        </td>
+      </tr>
+    ))}
+</tbody>
     </table>
   </div>
 
@@ -144,18 +207,37 @@ color: "#1e293b",
   >
     <h3>Update Stock</h3>
 
-    <form>
-      <input
-        type="text"
-        placeholder="Product Name"
-        className="form-control mb-3"
-      />
+    <form onSubmit={handleStockUpdate}>
+      <select
+  className="form-control mb-3"
+  value={selectedProduct}
+  onChange={(e) =>
+    setSelectedProduct(e.target.value)
+  }
+>
+  <option value="">
+    Select Product
+  </option>
+
+  {products.map((product) => (
+    <option
+      key={product._id}
+      value={product._id}
+    >
+      {product.name}
+    </option>
+  ))}
+</select>
 
       <input
-        type="number"
-        placeholder="New Stock Quantity"
-        className="form-control mb-3"
-      />
+  type="number"
+  placeholder="New Stock Quantity"
+  className="form-control mb-3"
+  value={newStock}
+  onChange={(e) =>
+    setNewStock(e.target.value)
+  }
+/>
 
       <button
         type="submit"
