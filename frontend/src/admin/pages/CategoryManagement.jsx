@@ -3,6 +3,8 @@ import axios from "axios";
 import AdminLayout from "../layout/AdminLayout";
 function CategoryManagement() {
   const [categories, setCategories] = useState([]);
+  const [name, setName] = useState("");
+const [editingId, setEditingId] = useState(null);
 
 useEffect(() => {
   fetchCategories();
@@ -15,6 +17,93 @@ const fetchCategories = async () => {
     );
 
     setCategories(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.post(
+      "http://localhost:5000/api/categories",
+      {
+        name,
+        description: name,
+        status: true,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Category Added");
+
+    setName("");
+
+    fetchCategories();
+  } catch (error) {
+    console.log(error);
+    alert("Failed");
+  }
+};
+
+const handleDelete = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.delete(
+      `http://localhost:5000/api/categories/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Category Deleted");
+
+    fetchCategories();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleEdit = (category) => {
+  setEditingId(category._id);
+  setName(category.name);
+};
+
+const handleUpdate = async (e) => {
+  e.preventDefault();
+
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.put(
+      `http://localhost:5000/api/categories/${editingId}`,
+      {
+        name,
+        description: name,
+        status: true,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Category Updated");
+
+    setEditingId(null);
+    setName("");
+
+    fetchCategories();
   } catch (error) {
     console.log(error);
   }
@@ -41,18 +130,30 @@ const fetchCategories = async () => {
       >
         <h3>Add Category</h3>
 
-        <form>
+        <form
+  onSubmit={
+    editingId
+      ? handleUpdate
+      : handleSubmit
+  }
+>
           <input
-            type="text"
-            placeholder="Category Name"
-            className="form-control mb-3"
-          />
+  type="text"
+  placeholder="Category Name"
+  className="form-control mb-3"
+  value={name}
+  onChange={(e) =>
+    setName(e.target.value)
+  }
+/>
 
           <button
             type="submit"
             className="btn btn-primary"
           >
-            Add Category
+            {editingId
+  ? "Update Category"
+  : "Add Category"}
           </button>
         </form>
       </div>
@@ -91,13 +192,19 @@ const fetchCategories = async () => {
             gap: "10px",
           }}
         >
-          <button className="btn btn-warning btn-sm">
-            Edit
-          </button>
+          <button
+  className="btn btn-warning btn-sm"
+  onClick={() => handleEdit(category)}
+>
+  Edit
+</button>
 
-          <button className="btn btn-danger btn-sm">
-            Delete
-          </button>
+          <button
+  className="btn btn-danger btn-sm"
+  onClick={() => handleDelete(category._id)}
+>
+  Delete
+</button>
         </div>
       </td>
     </tr>
