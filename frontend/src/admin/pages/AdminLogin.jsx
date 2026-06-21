@@ -1,17 +1,41 @@
 import { useState } from "react";
-
+import axios from "axios";
 function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const handleLogin = async (e) => {
+  e.preventDefault();
 
-    localStorage.setItem("adminAuth", "true");
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/login",
+      {
+        email,
+        password,
+      }
+    );
+
+    localStorage.setItem(
+      "token",
+      response.data.token
+    );
+
+    localStorage.setItem(
+      "adminAuth",
+      "true"
+    );
+
+    alert("Login Successful");
 
     window.location.href = "/";
-  };
-
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      "Login Failed"
+    );
+  }
+};
   return (
     <div>
       <h1>Admin Login</h1>
