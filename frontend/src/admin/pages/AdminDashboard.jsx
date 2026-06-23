@@ -1,5 +1,6 @@
-import AdminLayout from "../layout/AdminLayout";
-import {
+import { useEffect, useState } from "react";
+import axios from "axios";
+import AdminLayout from "../layout/AdminLayout";import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -26,6 +27,36 @@ ChartJS.register(
 );
 
 function AdminDashboard() {
+  const [products, setProducts] = useState([]);
+const [categories, setCategories] = useState([]);
+useEffect(() => {
+  fetchProducts();
+  fetchCategories();
+}, []);
+
+const fetchProducts = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/api/products"
+    );
+
+    setProducts(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/api/categories"
+    );
+
+    setCategories(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
   const revenueData = {
   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
@@ -49,10 +80,12 @@ const salesData = {
 };
 
 const categoryData = {
-  labels: ["Electronics", "Accessories", "Fashion", "Books"],
+  labels: categories.map(
+    (category) => category.name
+  ),
   datasets: [
     {
-      data: [40, 25, 20, 15],
+      data: categories.map(() => 1),
       backgroundColor: [
         "#2563eb",
         "#16a34a",
@@ -104,7 +137,7 @@ color: "#1e293b",
       }}
     >
       <h4>📦 Products</h4>
-      <h2>120</h2>
+      <h2>{products.length}</h2>
     </div>
 
     <div
@@ -152,7 +185,14 @@ color: "#1e293b",
       }}
     >
       <h4>⚠️ Low Stock</h4>
-      <h2>8</h2>
+      <h2>
+  {
+    products.filter(
+      (product) =>
+        product.stockQuantity < 10
+    ).length
+  }
+</h2>
     </div>
   </div>
 
