@@ -16,6 +16,23 @@ const createOrder = async (req, res) => {
       });
     }
 
+    // Product & Stock Validation
+    for (const item of cart.items) {
+
+      if (!item.product) {
+        return res.status(400).json({
+          message: "Product not found"
+        });
+      }
+
+      if (item.product.stockQuantity < item.quantity) {
+        return res.status(400).json({
+          message: `${item.product.name} is out of stock`
+        });
+      }
+
+    }
+
     let totalAmount = 0;
 
     const products = cart.items.map(item => {
@@ -28,6 +45,7 @@ const createOrder = async (req, res) => {
         quantity: item.quantity,
         price: item.product.price
       };
+
     });
 
     const order = await Order.create({
@@ -49,14 +67,19 @@ const createOrder = async (req, res) => {
           }
         }
       );
+
     }
 
-    // Empty Cart
+    // Clear Cart
     cart.items = [];
 
     await cart.save();
 
-    res.status(201).json(order);
+    res.status(201).json({
+      success: true,
+      message: "Order placed successfully",
+      order
+    });
 
   } catch (error) {
 

@@ -10,6 +10,9 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const inventoryRoutes = require("./routes/inventoryRoutes");
+const shippingRoutes = require("./routes/shippingRoutes");
+
 dotenv.config();
 
 connectDB();
@@ -29,6 +32,8 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/inventory", inventoryRoutes);
+app.use("/api/shipping", shippingRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running...");

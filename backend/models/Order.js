@@ -32,10 +32,17 @@ const orderSchema = new mongoose.Schema(
     country:String
   },
 
-  status:{
-    type:String,
-    default:"Pending"
-  }
+  status: {
+  type: String,
+  enum: [
+    "Pending",
+    "Processing",
+    "Shipped",
+    "Delivered",
+    "Cancelled"
+  ],
+  default: "Pending"
+}
 },
 {
   timestamps:true

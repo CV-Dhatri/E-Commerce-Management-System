@@ -12,6 +12,7 @@ const {
   updateProfile,
   addAddress,
   updateAddress,
+  getAddresses,
   deleteAddress
 }
 =
@@ -35,6 +36,12 @@ router.post(
   "/address",
   authMiddleware,
   addAddress
+);
+
+router.get(
+  "/addresses",
+  authMiddleware,
+  getAddresses
 );
 
 router.put(
