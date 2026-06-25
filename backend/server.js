@@ -14,6 +14,7 @@ const inventoryRoutes = require("./routes/inventoryRoutes");
 const shippingRoutes = require("./routes/shippingRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const exportRoutes = require("./routes/exportRoutes");
+const recommendationRoutes = require("./routes/recommendationRoutes");
 dotenv.config();
 
 connectDB();
@@ -37,6 +38,7 @@ app.use("/api/inventory", inventoryRoutes);
 app.use("/api/shipping", shippingRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/export", exportRoutes);
+app.use("/api/recommendations", recommendationRoutes);
 app.get("/", (req, res) => {
   res.send("API Running...");
 });
