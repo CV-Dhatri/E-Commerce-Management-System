@@ -1,6 +1,63 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import AdminLayout from "../layout/AdminLayout";
 
 function Reports() {
+  const [orders, setOrders] = useState([]);
+const [products, setProducts] = useState([]);
+const [customers, setCustomers] = useState([]);
+const [reviews, setReviews] = useState([]);
+useEffect(() => {
+  fetchReports();
+}, []);
+
+const fetchReports = async () => {
+  try {
+
+    const token = localStorage.getItem("token");
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const [
+      orderRes,
+      productRes,
+      customerRes,
+      reviewRes,
+    ] = await Promise.all([
+
+      axios.get(
+        "http://localhost:5000/api/export/orders",
+        { headers }
+      ),
+
+      axios.get(
+        "http://localhost:5000/api/export/products",
+        { headers }
+      ),
+
+      axios.get(
+        "http://localhost:5000/api/export/customers",
+        { headers }
+      ),
+
+      axios.get(
+        "http://localhost:5000/api/export/reviews",
+        { headers }
+      ),
+
+    ]);
+
+    setOrders(orderRes.data);
+    setProducts(productRes.data);
+    setCustomers(customerRes.data);
+    setReviews(reviewRes.data.reviews || []);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <AdminLayout>
       <h1
@@ -29,7 +86,14 @@ function Reports() {
           }}
         >
           <h4>Total Revenue</h4>
-          <h2>₹25,000</h2>
+          <h2>
+₹
+{orders.reduce(
+  (sum, order) =>
+    sum + order.totalAmount,
+  0
+)}
+</h2>
         </div>
 
         <div
@@ -41,7 +105,7 @@ function Reports() {
           }}
         >
           <h4>Total Orders</h4>
-          <h2>50</h2>
+          <h2>{orders.length}</h2>
         </div>
 
         <div
@@ -53,7 +117,7 @@ function Reports() {
           }}
         >
           <h4>Total Customers</h4>
-          <h2>75</h2>
+          <h2>{customers.length}</h2>
         </div>
 
         <div
@@ -65,7 +129,7 @@ function Reports() {
           }}
         >
           <h4>Total Products</h4>
-          <h2>120</h2>
+          <h2>{products.length}</h2>
         </div>
       </div>
 
@@ -90,27 +154,34 @@ function Reports() {
           </thead>
 
           <tbody>
-            <tr>
-              <td>January</td>
-              <td>₹5,000</td>
-              <td>10</td>
-              <td>15</td>
-            </tr>
 
-            <tr>
-              <td>February</td>
-              <td>₹8,000</td>
-              <td>12</td>
-              <td>18</td>
-            </tr>
+<tr>
+<td>Total Orders</td>
+<td>₹{
+orders.reduce(
+(sum,o)=>sum+o.totalAmount,
+0
+)}
+</td>
+<td>{orders.length}</td>
+<td>{customers.length}</td>
+</tr>
 
-            <tr>
-              <td>March</td>
-              <td>₹12,000</td>
-              <td>15</td>
-              <td>22</td>
-            </tr>
-          </tbody>
+<tr>
+<td>Products</td>
+<td>-</td>
+<td>{products.length}</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>Reviews</td>
+<td>-</td>
+<td>{reviews.length}</td>
+<td>-</td>
+</tr>
+
+</tbody>
         </table>
       </div>
     </AdminLayout>

@@ -9,7 +9,8 @@ const {
   createOrder,
   getUserOrders,
   getOrderDetails,
-  validateCoupon
+  validateCoupon,
+  getAllOrders
 }
 =
 require("../controllers/orderController");
@@ -24,6 +25,12 @@ router.get(
   "/my-orders",
   authMiddleware,
   getUserOrders
+);
+
+router.get(
+  "/",
+  authMiddleware,
+  getAllOrders
 );
 
 router.get(

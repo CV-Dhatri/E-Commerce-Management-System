@@ -1,6 +1,31 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import AdminLayout from "../layout/AdminLayout";
-
 function CustomerManagement() {
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+  fetchUsers();
+}, []);
+
+const fetchUsers = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:5000/api/users",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setUsers(response.data);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <AdminLayout>
       <h1
@@ -28,36 +53,28 @@ function CustomerManagement() {
               <th>ID</th>
               <th>Customer Name</th>
               <th>Email</th>
-              <th>Phone</th>
-              <th>Status</th>
+              <th>Role</th>
+<th>Created Date</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Rahul Sharma</td>
-              <td>rahul@gmail.com</td>
-              <td>9876543210</td>
-              <td>Active</td>
-            </tr>
+  {users.map((user, index) => (
+    <tr key={user._id}>
+      <td>{index + 1}</td>
 
-            <tr>
-              <td>2</td>
-              <td>Priya Singh</td>
-              <td>priya@gmail.com</td>
-              <td>9876543211</td>
-              <td>Active</td>
-            </tr>
+      <td>{user.name}</td>
 
-            <tr>
-              <td>3</td>
-              <td>Amit Kumar</td>
-              <td>amit@gmail.com</td>
-              <td>9876543212</td>
-              <td>Inactive</td>
-            </tr>
-          </tbody>
+      <td>{user.email}</td>
+
+      <td>{user.role}</td>
+
+      <td>
+        {new Date(user.createdAt).toLocaleDateString()}
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
       </div>
     </AdminLayout>

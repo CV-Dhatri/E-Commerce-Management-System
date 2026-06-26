@@ -82,23 +82,6 @@ function App() {
           }
         />
 
-        <Route
-          path="/reviews"
-          element={
-            <ProtectedRoute>
-              <ReviewManagement />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/coupons"
-          element={
-            <ProtectedRoute>
-              <CouponManagement />
-            </ProtectedRoute>
-          }
-        />
 
         <Route
           path="/reports"
