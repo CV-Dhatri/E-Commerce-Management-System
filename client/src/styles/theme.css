@@ -1,0 +1,31 @@
+:root {
+  /* Primary Colors */
+  --primary-color: #2563eb;
+  --primary-dark: #1d4ed8;
+
+  /* Accent */
+  --secondary-color: #f59e0b;
+
+  /* Success */
+  --success-color: #16a34a;
+
+  /* Background */
+  --background-color: #f8fafc;
+
+  /* Cards */
+  --card-color: #ffffff;
+
+  /* Text */
+  --text-color: #1e293b;
+  --text-light: #64748b;
+
+  /* Borders */
+  --border-color: #e2e8f0;
+
+  /* Shadow */
+  --shadow:
+    0 10px 30px rgba(0,0,0,.08);
+
+  /* Radius */
+  --radius: 15px;
+}

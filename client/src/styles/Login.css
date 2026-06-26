@@ -1,0 +1,44 @@
+.login-container{
+    min-height:90vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f7fb;
+}
+
+.login-card{
+    width:100%;
+    max-width:450px;
+    border:none;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.1);
+}
+
+.login-card .card-body{
+    padding:40px;
+}
+
+.login-title{
+    text-align:center;
+    font-weight:bold;
+    margin-bottom:25px;
+}
+
+.toggle-password{
+    cursor:pointer;
+}
+
+.login-btn{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+}
+
+.form-control{
+    border-radius:10px;
+}
+
+.login-footer{
+    text-align:center;
+    margin-top:20px;
+}

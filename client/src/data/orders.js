@@ -1,0 +1,43 @@
+const orders = [
+  {
+    id: 1001,
+    productName: "Gaming Laptop",
+    image: "https://picsum.photos/300/200?random=11",
+    price: 65000,
+    quantity: 1,
+    total: 65000,
+    status: "Delivered",
+    payment: "Paid",
+    date: "15 June 2026",
+    expectedDelivery: "18 June 2026",
+    address: "No.25 MG Road, Bangalore, Karnataka - 560001",
+  },
+  {
+    id: 1002,
+    productName: "Wireless Mouse",
+    image: "https://picsum.photos/300/200?random=12",
+    price: 999,
+    quantity: 2,
+    total: 1998,
+    status: "Processing",
+    payment: "Paid",
+    date: "22 June 2026",
+    expectedDelivery: "27 June 2026",
+    address: "Electronic City Phase 1, Bangalore - 560100",
+  },
+  {
+    id: 1003,
+    productName: "Mechanical Keyboard",
+    image: "https://picsum.photos/300/200?random=13",
+    price: 3999,
+    quantity: 1,
+    total: 3999,
+    status: "Shipped",
+    payment: "Paid",
+    date: "24 June 2026",
+    expectedDelivery: "29 June 2026",
+    address: "Whitefield, Bangalore - 560066",
+  },
+];
+
+export default orders;
