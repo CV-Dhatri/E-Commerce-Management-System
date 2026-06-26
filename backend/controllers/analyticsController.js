@@ -79,9 +79,9 @@ const getCustomerAnalytics = async (req, res) => {
   try {
 
     const totalCustomers =
-      await User.countDocuments({
-        role: "user"
-      });
+  await User.countDocuments({
+    role: "customer"
+  });
 
     const totalAdmins =
       await User.countDocuments({
@@ -115,9 +115,9 @@ const getDashboardStats = async (req, res) => {
       await Order.countDocuments();
 
     const totalCustomers =
-      await User.countDocuments({
-        role: "user"
-      });
+  await User.countDocuments({
+    role: "customer"
+  });
 
     const revenue =
       await Order.aggregate([

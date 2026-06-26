@@ -1,5 +1,4 @@
 
-
 const express = require("express");
 
 const router = express.Router();
@@ -7,16 +6,25 @@ const router = express.Router();
 const authMiddleware =
 require("../middleware/authMiddleware");
 
+const roleMiddleware =
+require("../middleware/roleMiddleware");
+
 const {
   getProfile,
+  getAllUsers,
   updateProfile,
   addAddress,
   updateAddress,
   getAddresses,
   deleteAddress
-}
-=
-require("../controllers/userController");
+} = require("../controllers/userController");
+
+router.get(
+  "/",
+  authMiddleware,
+  roleMiddleware("admin"),
+  getAllUsers
+);
 
 // Profile
 router.get(
@@ -24,6 +32,8 @@ router.get(
   authMiddleware,
   getProfile
 );
+
+
 
 router.put(
   "/profile",

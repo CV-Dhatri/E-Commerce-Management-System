@@ -65,14 +65,6 @@ marginBottom: "20px",
     👥 Customers
   </Link>
 
-  <Link to="/reviews" style={linkStyle}>
-    ⭐ Reviews
-  </Link>
-
-  <Link to="/coupons" style={linkStyle}>
-    🎟️ Coupons
-  </Link>
-
   <Link to="/reports" style={linkStyle}>
     📈 Reports
   </Link>

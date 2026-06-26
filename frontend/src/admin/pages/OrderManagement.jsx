@@ -1,6 +1,85 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import AdminLayout from "../layout/AdminLayout";
-
 function OrderManagement() {
+  const [orders, setOrders] = useState([]);
+const [selectedOrder, setSelectedOrder] = useState(null);
+useEffect(() => {
+  fetchOrders();
+  const handleStatusUpdate = async (
+  orderId,
+  status
+) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.put(
+      `http://localhost:5000/api/shipping/status/${orderId}`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Order status updated");
+
+    fetchOrders();
+
+  } catch (error) {
+    console.log(error);
+    alert("Failed to update status");
+  }
+};
+}, []);
+
+const fetchOrders = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:5000/api/orders",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setOrders(response.data);
+
+    if (response.data.length > 0) {
+      setSelectedOrder(response.data[0]);
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+const handleStatusUpdate = async (orderId, status) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.put(
+      `http://localhost:5000/api/shipping/status/${orderId}`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Order status updated");
+
+    fetchOrders();
+
+  } catch (error) {
+    console.log(error);
+    alert("Failed to update status");
+  }
+};
 return ( <AdminLayout>
 <h1
 style={{
@@ -35,83 +114,104 @@ color: "#1e293b",
         </tr>
       </thead>
 
-      <tbody>
-        <tr>
-          <td>#ORD001</td>
-          <td>Rahul Sharma</td>
-          <td>3</td>
-          <td>₹5,500</td>
-          <td>Processing</td>
-          <td>
-            <select className="form-select">
-              <option>Processing</option>
-              <option>Shipped</option>
-              <option>Delivered</option>
-              <option>Cancelled</option>
-            </select>
-          </td>
-        </tr>
+     <tbody>
+  {orders.map((order) => (
+    <tr
+      key={order._id}
+      onClick={() => setSelectedOrder(order)}
+      style={{ cursor: "pointer" }}
+    >
+      <td>{order._id.slice(-6)}</td>
 
-        <tr>
-          <td>#ORD002</td>
-          <td>Priya Singh</td>
-          <td>2</td>
-          <td>₹2,000</td>
-          <td>Shipped</td>
-          <td>
-            <select className="form-select">
-              <option>Processing</option>
-              <option selected>Shipped</option>
-              <option>Delivered</option>
-              <option>Cancelled</option>
-            </select>
-          </td>
-        </tr>
-      </tbody>
+      <td>{order.user?.name}</td>
+
+      <td>{order.products.length}</td>
+
+      <td>₹{order.totalAmount}</td>
+
+      <td>{order.status}</td>
+
+      <td>
+        <select
+  className="form-select"
+  value={order.status}
+  onChange={(e) =>
+    handleStatusUpdate(
+      order._id,
+      e.target.value
+    )
+  }
+>
+          <option>Pending</option>
+          <option>Processing</option>
+          <option>Shipped</option>
+          <option>Delivered</option>
+          <option>Cancelled</option>
+        </select>
+      </td>
+    </tr>
+  ))}
+</tbody>
     </table>
   </div>
 
   {/* Order Details */}
-  <div
-    style={{
-      background: "white",
-      padding: "20px",
-      borderRadius: "10px",
-      boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-    }}
-  >
-    <h3>📋 Order Details</h3>
+ <h3>📋 Order Details</h3>
 
+{selectedOrder ? (
+  <>
     <p>
-      <strong>Order ID:</strong> #ORD001
+      <strong>Order ID:</strong>{" "}
+      {selectedOrder._id}
     </p>
 
     <p>
-      <strong>Customer:</strong> Rahul Sharma
+      <strong>Customer:</strong>{" "}
+      {selectedOrder.user?.name}
+    </p>
+
+    <p>
+      <strong>Email:</strong>{" "}
+      {selectedOrder.user?.email}
     </p>
 
     <p>
       <strong>Shipping Address:</strong>
       <br />
-      24 MG Road,
+      {selectedOrder.address.fullName}
       <br />
-      Bengaluru, Karnataka,
+      {selectedOrder.address.street}
       <br />
-      India - 560001
+      {selectedOrder.address.city},{" "}
+      {selectedOrder.address.state}
+      <br />
+      {selectedOrder.address.country} -{" "}
+      {selectedOrder.address.pincode}
     </p>
 
     <p>
-      <strong>Coupon Applied:</strong> SAVE10
+      <strong>Total Amount:</strong> ₹
+      {selectedOrder.totalAmount}
     </p>
 
     <p>
-      <strong>Total Amount:</strong> ₹5,500
+      <strong>Status:</strong>{" "}
+      {selectedOrder.status}
     </p>
 
-    <p>
-      <strong>Status:</strong> Processing
-    </p>
-  </div>
+    <h5>Products</h5>
+
+    <ul>
+      {selectedOrder.products.map((item) => (
+        <li key={item._id}>
+          {item.product?.name} × {item.quantity}
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>Select an order to view details.</p>
+)}
 </AdminLayout>
 
 
